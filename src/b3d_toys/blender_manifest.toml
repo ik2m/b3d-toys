@@ -9,3 +9,7 @@ maintainer = "ik2m <ik2m@example.com>"
 type = "add-on"
 
 blender_version_min = "4.2.0"
+
+license = [
+  "SPDX:GPL-3.0-or-later",
+]
