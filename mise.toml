@@ -1,3 +1,4 @@
 [tools]
+# blenderに入っているpythonと同じバージョンを指定
 python = "3.11.7"
 uv = "latest"
