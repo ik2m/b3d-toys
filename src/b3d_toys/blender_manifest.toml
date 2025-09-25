@@ -1,0 +1,11 @@
+schema_version = "1.0.0"
+
+id = "b3d_toys"
+version = "0.1.0"
+name = "b3d_toys"
+tagline = "ik2mのblenderツール"
+maintainer = "ik2m <ik2m@example.com>"
+
+type = "add-on"
+
+blender_version_min = "4.2.0"
