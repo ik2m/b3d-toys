@@ -1,8 +1,12 @@
-# scripts/link_blender_extension.py
+#!/usr/bin/env python3
 from pathlib import Path
 import shutil
 import os
 import sys
+
+if os.name != "nt":
+    print("このスクリプトは Windows 専用です。中断します。")
+    sys.exit(1)
 
 # Blender 拡張機能の user_default フォルダ
 ext_path = Path.home() / "AppData/Roaming/Blender Foundation/Blender/4.2/extensions/user_default/b3d_toys"
