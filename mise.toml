@@ -2,3 +2,8 @@
 # blenderに入っているpythonと同じバージョンを指定
 python = "3.11.7"
 uv = "latest"
+
+
+[tasks.link-blender-addon]
+description = "Blender拡張機能フォルダにシンボリックリンクを作成"
+run = 'python scripts/link_blender_extension.py'
