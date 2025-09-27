@@ -27,7 +27,7 @@ if ext_path.exists() or ext_path.is_symlink():
 # シンボリックリンク作成
 try:
     os.symlink(src_path, ext_path, target_is_directory=True)
-    print(f"シンボリックリンクを作成しました。： {src_path} -> {ext_path}")
+    print(f"シンボリックリンクを作成しました： {src_path} -> {ext_path}")
 except OSError as e:
     print(f"シンボリックリンクの作成に失敗しました: {e}")
     sys.exit(1)
