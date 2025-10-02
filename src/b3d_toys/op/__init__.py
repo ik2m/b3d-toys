@@ -20,6 +20,7 @@ class UV_OT_AlignIslandsX(bpy.types.Operator):
         obj = context.edit_object
         me = obj.data
         bm = bmesh.from_edit_mesh(me)
+        #アクティブなUVレイヤー
         uv_layer = bm.loops.layers.uv.active
 
         if not uv_layer:
@@ -38,30 +39,60 @@ class UV_OT_AlignIslandsX(bpy.types.Operator):
         obj = context.edit_object
         me = obj.data
         bm = bmesh.from_edit_mesh(me)
-        uv_layer = bm.loops.layers.uv.verify()
+        uv_layer = bm.loops.layers.uv.active
 
-        # islandごとにUVループを収集
-        islands = []
-        visited_faces = set()
+        # UV選択されているループを収集
+        def get_selected_uv_loops():
+            """UVエディタで選択されているループを取得"""
+            selected_loops = []
+            for face in bm.faces:
+                for loop in face.loops:
+                    if loop[uv_layer].select:
+                        selected_loops.append(loop)
+            return selected_loops
 
-        def collect_island(start_face):
-            stack = [start_face]
-            island_faces = set()
-            while stack:
-                f = stack.pop()
-                if f in island_faces:
+        # UVアイランドを検出
+        def get_uv_islands_from_selection():
+            """選択されたUVからアイランドを検出"""
+            selected_loops = get_selected_uv_loops()
+            if not selected_loops:
+                return []
+
+            # 選択されているループが属する面を収集
+            selected_faces = set(loop.face for loop in selected_loops)
+
+            islands = []
+            visited_faces = set()
+
+            for start_face in selected_faces:
+                if start_face in visited_faces:
                     continue
-                island_faces.add(f)
-                for e in f.edges:
-                    linked = [lf for lf in e.link_faces if lf not in island_faces]
-                    stack.extend(linked)
-            return island_faces
 
-        for f in bm.faces:
-            if f.select and f not in visited_faces:
-                island = collect_island(f)
-                visited_faces |= island
-                islands.append(island)
+                # アイランドを構築
+                island = set()
+                stack = [start_face]
+
+                while stack:
+                    face = stack.pop()
+                    if face in island or face not in selected_faces:
+                        continue
+
+                    island.add(face)
+
+                    # UV縫い目でない隣接面を追加
+                    for edge in face.edges:
+                        if not edge.seam:
+                            for linked_face in edge.link_faces:
+                                if linked_face in selected_faces and linked_face not in island:
+                                    stack.append(linked_face)
+
+                if island:
+                    visited_faces.update(island)
+                    islands.append(island)
+
+            return islands
+
+        islands = get_uv_islands_from_selection()
 
         if not islands:
             self.report({'WARNING'}, "No UV islands selected")
@@ -69,7 +100,10 @@ class UV_OT_AlignIslandsX(bpy.types.Operator):
 
         # 各アイランドごとに処理
         for island in islands:
-            uvs = [l[uv_layer].uv for f in island if f.select for l in f.loops]
+            # このアイランドの選択されているUVのみを収集
+            uvs = [loop[uv_layer].uv for face in island for loop in face.loops
+                   if loop[uv_layer].select]
+
             if not uvs:
                 continue
 
@@ -79,6 +113,7 @@ class UV_OT_AlignIslandsX(bpy.types.Operator):
             # 移動量を計算
             offset_x = 0.5 - center_x
 
+            # このアイランドの選択UVを移動
             for uv in uvs:
                 uv.x += offset_x
 
