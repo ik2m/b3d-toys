@@ -6,7 +6,7 @@ from . import auto_collection_color, op, ui
 
 if _needs_reload:
     import importlib
-    for mod in [module1, module2, module3]:
+    for mod in [auto_collection_color, op, ui]:
         importlib.reload(mod)
     print("Add-on Reloaded")
 
