@@ -28,7 +28,7 @@ class UV_PT_IslandAlignPanel(bpy.types.Panel):
         layout.operator("uv.ik2m_align_islands_x", icon="ALIGN_CENTER")
 
 
-ui_classes = (
+classes = (
     DevPanel,
     UV_PT_IslandAlignPanel,
 )

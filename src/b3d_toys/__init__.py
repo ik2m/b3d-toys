@@ -1,13 +1,19 @@
-import bpy
-from . import auto_collection_color
-from .op import op_classes
-from .ui import ui_classes
+_needs_reload = "bpy" in locals()
 
+
+import bpy
+from . import auto_collection_color, op, ui
+
+if _needs_reload:
+    import importlib
+    for mod in [module1, module2, module3]:
+        importlib.reload(mod)
+    print("Add-on Reloaded")
 
 def register():
-    for cls in ui_classes:
+    for cls in ui.classes:
         bpy.utils.register_class(cls)
-    for cls in op_classes:
+    for cls in op.classes:
         bpy.utils.register_class(cls)
     auto_collection_color.register()
 

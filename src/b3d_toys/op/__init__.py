@@ -58,4 +58,4 @@ class UV_OT_AlignIslandsX(bpy.types.Operator):
         bmesh.update_edit_mesh(me)
         return {'FINISHED'}
 
-op_classes = [UV_OT_AlignIslandsX]
+classes = [UV_OT_AlignIslandsX]
