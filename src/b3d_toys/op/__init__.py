@@ -11,6 +11,12 @@ class UV_OT_AlignIslandsX(bpy.types.Operator):
     def poll(cls, context):
         if context.mode != 'EDIT_MESH' or context.edit_object is None:
             return False
+
+        # UV選択モードがアイランドモードかチェック
+        tool_settings = context.scene.tool_settings
+        if tool_settings.uv_select_mode != 'ISLAND':
+            return False
+
         obj = context.edit_object
         me = obj.data
         bm = bmesh.from_edit_mesh(me)
