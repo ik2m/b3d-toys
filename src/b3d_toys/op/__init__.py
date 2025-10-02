@@ -7,6 +7,27 @@ class UV_OT_AlignIslandsX(bpy.types.Operator):
     bl_label = "Align Islands X=0.5"
     bl_options = {'REGISTER', 'UNDO'}
 
+    @classmethod
+    def poll(cls, context):
+        if context.mode != 'EDIT_MESH' or context.edit_object is None:
+            return False
+        obj = context.edit_object
+        me = obj.data
+        bm = bmesh.from_edit_mesh(me)
+        uv_layer = bm.loops.layers.uv.active
+
+        if not uv_layer:
+            return False
+
+        # UVが選択されているかチェック
+        for f in bm.faces:
+            if f.select:
+                for loop in f.loops:
+                    if loop[uv_layer].select:
+                        return True
+
+        return False
+
     def execute(self, context):
         obj = context.edit_object
         me = obj.data
