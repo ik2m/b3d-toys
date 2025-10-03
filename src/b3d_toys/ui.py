@@ -17,6 +17,7 @@ class DevPanel(bpy.types.Panel):
         row = layout.row()
         row.operator("script.reload", text="スクリプトリロード", icon="FILE_REFRESH")
 
+
 # UVエディタのパネル
 class UV_PT_IslandAlignPanel(bpy.types.Panel):
     bl_category = 'ik2m'
@@ -43,6 +44,10 @@ class IK2M_PT_file_popover(bpy.types.Panel):
         row.operator("wm.ik2m_open_blend_file_dir", text="フォルダを開く", icon="FILEBROWSER")
 
         layout.separator()
+
+        row = layout.row()
+        row.operator("script.reload", text="スクリプトリロード", icon="FILE_REFRESH")
+
 
 # 右上のメニュドロワー
 def file_menu_drawer(self, context):
