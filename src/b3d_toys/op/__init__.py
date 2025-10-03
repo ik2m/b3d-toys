@@ -1,8 +1,13 @@
 import bpy
 import bmesh
+import os
+import subprocess
+import sys
+
+from bpy.types import Operator
 from collections import defaultdict
 
-class UV_OT_AlignIslandsX(bpy.types.Operator):
+class UV_OT_AlignIslandsX(Operator):
     bl_idname = "uv.ik2m_align_islands_x"
     bl_label = "Align Islands X=0.5"
     bl_options = {'REGISTER', 'UNDO'}
@@ -120,4 +125,52 @@ class UV_OT_AlignIslandsX(bpy.types.Operator):
         bmesh.update_edit_mesh(me)
         return {'FINISHED'}
 
-classes = [UV_OT_AlignIslandsX]
+def _open_folder(path: str) -> bool:
+    """与えられたディレクトリをOS既定のファイルマネージャで開く。成功ならTrue。"""
+    if not path:
+        return False
+    path = os.path.abspath(path)
+    if not os.path.exists(path):
+        return False
+    # ディレクトリならそのまま、ファイルなら親ディレクトリを開く
+    if os.path.isfile(path):
+        path = os.path.dirname(path)
+    try:
+        if sys.platform.startswith('win'):
+            os.startfile(path)
+        elif sys.platform == 'darwin':
+            subprocess.run(["open", path], check=False)
+        else:
+            # Linux一般 (xdg-open)
+            subprocess.run(["xdg-open", path], check=False)
+        return True
+    except Exception as e:
+        print("Open folder failed:", e)
+        return False
+
+
+class TEXT_OT_open_current_file_dir(Operator):
+    bl_idname = "text.open_current_file_dir"
+    bl_label = "Open Containing Folder"
+    bl_description = "編集中のテキストファイル、あるいは保存されている .blend ファイルのディレクトリを開きます"
+    bl_options = {'REGISTER'}
+
+    def execute(self, context):
+        filepath = None
+        # .blend ファイルの保存先を取得
+        if bpy.data.filepath:
+            filepath = os.path.dirname(bpy.path.abspath(bpy.data.filepath))
+        # まだ何も保存されていない場合は失敗としてユーザー通知
+        if not filepath or not os.path.exists(filepath):
+            self.report({'WARNING'}, "開くディレクトリが見つかりません。.blend が保存されていない可能性があります。")
+            return {'CANCELLED'}
+
+        ok = _open_folder(filepath)
+        if not ok:
+            self.report({'ERROR'}, f"ディレクトリを開けませんでした: {filepath}")
+            return {'CANCELLED'}
+
+        self.report({'INFO'}, f"開きました: {filepath}")
+        return {'FINISHED'}
+
+classes = [UV_OT_AlignIslandsX, TEXT_OT_open_current_file_dir]
