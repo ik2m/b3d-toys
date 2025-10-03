@@ -1,5 +1,7 @@
 import bpy
 
+
+# 3Dビューポートのパネル
 class DevPanel(bpy.types.Panel):
     bl_category = "ik2m"
     bl_idname = "IK2M_PT_B3dToysPanel"
@@ -15,7 +17,7 @@ class DevPanel(bpy.types.Panel):
         row = layout.row()
         row.operator("script.reload", text="スクリプトリロード", icon="FILE_REFRESH")
 
-
+# UVエディタのパネル
 class UV_PT_IslandAlignPanel(bpy.types.Panel):
     bl_category = 'ik2m'
     bl_label = "ik2m"
@@ -27,8 +29,32 @@ class UV_PT_IslandAlignPanel(bpy.types.Panel):
         layout = self.layout
         layout.operator("uv.ik2m_align_islands_x", icon="ALIGN_CENTER")
 
+# 画面上部のメニューのパネル
+class IK2M_PT_file_popover(bpy.types.Panel):
+    bl_label = "ik2m"
+    bl_space_type = 'TOPBAR'
+    bl_region_type = 'HEADER'
+    bl_ui_units_x = 8
+
+    def draw(self, context):
+        layout = self.layout
+
+        row = layout.row()
+        row.operator("wm.ik2m_open_blend_file_dir", text="ファイルを開く", icon="FILEBROWSER")
+
+        col.separator()
+
+# 右上のメニュドロワー
+def file_menu_drawer(self, context):
+    if context.region.alignment == 'RIGHT':
+        row= self.layout.row(align=True)
+        row.popover(
+            panel="IK2M_PT_file_popover",
+            text="ik2m",
+        )
 
 classes = (
     DevPanel,
     UV_PT_IslandAlignPanel,
+    IK2M_PT_file_popover
 )
