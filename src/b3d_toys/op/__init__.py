@@ -150,9 +150,9 @@ def _open_folder(path: str) -> bool:
 
 
 class TEXT_OT_open_current_file_dir(Operator):
-    bl_idname = "text.open_current_file_dir"
-    bl_label = "Open Containing Folder"
-    bl_description = "編集中のテキストファイル、あるいは保存されている .blend ファイルのディレクトリを開きます"
+    bl_idname = "wm.ik2m_open_blend_file_dir"
+    bl_label = "Open .blend File Directory"
+    bl_description = "保存されている .blend ファイルのディレクトリを開きます"
     bl_options = {'REGISTER'}
 
     def execute(self, context):
