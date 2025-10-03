@@ -125,7 +125,7 @@ class UV_OT_AlignIslandsX(Operator):
         bmesh.update_edit_mesh(me)
         return {'FINISHED'}
 
-class TEXT_OT_open_current_file_dir(Operator):
+class WM_OT_open_current_file_dir(Operator):
     bl_idname = "wm.ik2m_open_blend_file_dir"
     bl_label = "Open .blend File Directory"
     bl_description = "保存されている .blend ファイルのディレクトリを開きます"
@@ -169,7 +169,29 @@ class TEXT_OT_open_current_file_dir(Operator):
         self.report({'INFO'}, f"開きました: {filepath}")
         return {'FINISHED'}
 
-classes = [UV_OT_AlignIslandsX, TEXT_OT_open_current_file_dir]
+
+class WM_OT_copy_blend_file_dir(Operator):
+    bl_idname = "wm.ik2m_copy_blend_file_dir"
+    bl_label = "Copy .blend File Directory Path"
+    bl_description = "保存されている .blend ファイルのディレクトリパスをクリップボードにコピーします"
+    bl_options = {'REGISTER'}
+
+    @classmethod
+    def poll(cls, context):
+        # .blend ファイルが保存されているかチェック
+        return bool(bpy.data.filepath)
+
+    def execute(self, context):
+        filepath = os.path.dirname(bpy.path.abspath(bpy.data.filepath))
+        
+        # クリップボードにコピー
+        context.window_manager.clipboard = filepath
+        
+        self.report({'INFO'}, f"クリップボードにコピーしました: {filepath}")
+        return {'FINISHED'}
+
+
+classes = [UV_OT_AlignIslandsX, WM_OT_open_current_file_dir, WM_OT_copy_blend_file_dir]
 
 def register():
     for cls in classes:

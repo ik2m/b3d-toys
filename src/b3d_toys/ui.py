@@ -41,6 +41,8 @@ class IK2M_PT_file_popover(bpy.types.Panel):
         layout = self.layout
 
         row = layout.row()
+        row.operator("wm.ik2m_copy_blend_file_dir", text="クリップボードにコピー", icon="COPYDOWN")
+        row = layout.row()
         row.operator("wm.ik2m_open_blend_file_dir", text="フォルダを開く", icon="FILEBROWSER")
 
         layout.separator()
