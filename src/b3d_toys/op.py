@@ -186,6 +186,11 @@ class WM_OT_copy_blend_file_dir(Operator):
         
         # クリップボードにコピー
         context.window_manager.clipboard = filepath
+
+        # ポップアップメッセージを表示
+        def draw_popup(self, context):
+            self.layout.label(text=filepath)
+        context.window_manager.popup_menu(draw_popup, title="クリップボードにコピーしました", icon='INFO')
         
         self.report({'INFO'}, f"クリップボードにコピーしました: {filepath}")
         return {'FINISHED'}
