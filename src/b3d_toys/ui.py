@@ -40,6 +40,7 @@ class IK2M_PT_file_popover(bpy.types.Panel):
     def draw(self, context):
         layout = self.layout
 
+        layout.label(text="フォルダ")
         row = layout.row()
         row.operator("wm.ik2m_copy_blend_file_dir", text="クリップボードにコピー", icon="COPYDOWN")
         row = layout.row()
