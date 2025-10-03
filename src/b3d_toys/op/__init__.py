@@ -170,3 +170,11 @@ class TEXT_OT_open_current_file_dir(Operator):
         return {'FINISHED'}
 
 classes = [UV_OT_AlignIslandsX, TEXT_OT_open_current_file_dir]
+
+def register():
+    for cls in classes:
+        bpy.utils.register_class(cls)
+
+def unregister():
+    for cls in reversed(classes):
+        bpy.utils.unregister_class(cls)

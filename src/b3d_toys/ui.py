@@ -40,9 +40,9 @@ class IK2M_PT_file_popover(bpy.types.Panel):
         layout = self.layout
 
         row = layout.row()
-        row.operator("wm.ik2m_open_blend_file_dir", text="ファイルを開く", icon="FILEBROWSER")
+        row.operator("wm.ik2m_open_blend_file_dir", text="フォルダを開く", icon="FILEBROWSER")
 
-        col.separator()
+        layout.separator()
 
 # 右上のメニュドロワー
 def file_menu_drawer(self, context):
@@ -58,3 +58,13 @@ classes = (
     UV_PT_IslandAlignPanel,
     IK2M_PT_file_popover
 )
+
+def register():
+    for cls in classes:
+        bpy.utils.register_class(cls)
+    bpy.types.TOPBAR_HT_upper_bar.prepend(file_menu_drawer)
+
+def unregister():
+    bpy.types.TOPBAR_HT_upper_bar.remove(ui.file_menu_drawer)
+    for cls in reversed(classes):
+        bpy.utils.unregister_class(cls)
