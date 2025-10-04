@@ -195,11 +195,47 @@ class WM_OT_copy_blend_file_dir(Operator):
         self.report({'INFO'}, f"クリップボードにコピーしました: {filepath}")
         return {'FINISHED'}
 
+class DisableHair(Operator):
+    """ヘアーカーブオブジェクトをビューポートから非表示にする"""
+    bl_idname = "object.disable_hair_on_viewport"
+    bl_label = "Disable Hair on Viewport"
+    bl_options = {"REGISTER", "UNDO"}
+
+    def execute(self, context):
+        view_layer = context.view_layer
+
+        for obj in view_layer.objects:
+            if (
+                obj.type
+                == "CURVES"
+                # and getattr(obj.data, "bevel_object", None) is not None
+            ):
+                obj.hide_viewport = True
+
+        return {"FINISHED"}
+
+
+class EnableHair(Operator):
+    """ヘアーカーブオブジェクトをビューポートに表示する"""
+    bl_idname = "object.enable_hair_on_viewport"
+    bl_label = "Enable Hair on Viewport"
+    bl_options = {"REGISTER", "UNDO"}
+
+    def execute(self, context):
+        view_layer = context.view_layer
+        for obj in view_layer.objects:
+            if obj.type == "CURVES":
+                obj.hide_viewport = False
+
+        return {"FINISHED"}
+
 
 classes = [
     UV_OT_AlignIslandsX,
     WM_OT_open_current_file_dir,
-    WM_OT_copy_blend_file_dir
+    WM_OT_copy_blend_file_dir,
+    DisableHair,
+    EnableHair,
 ]
 
 def register():

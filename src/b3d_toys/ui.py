@@ -96,6 +96,13 @@ class VIEW3D_MT_PIE_b3d_toys(Menu):
         # 右下(South-East)
         pie.separator()
 
+def hide_hair_menu(self, context):
+    # アウトライナの右クリックで表示する
+    layout = self.layout
+    layout.separator()
+    layout.operator("object.disable_hair_on_viewport", icon="HIDE_ON")
+    layout.operator("object.enable_hair_on_viewport", icon="HIDE_OFF")
+
 classes = (
     DevPanel,
     UV_PT_IslandAlignPanel,
@@ -107,8 +114,14 @@ def register():
     for cls in classes:
         bpy.utils.register_class(cls)
     bpy.types.TOPBAR_HT_upper_bar.prepend(file_menu_drawer)
+    bpy.types.OUTLINER_MT_object.append(hide_hair_menu)
+    bpy.types.OUTLINER_MT_collection.append(hide_hair_menu)
+    bpy.types.OUTLINER_MT_context_menu.append(hide_hair_menu)
 
 def unregister():
+    bpy.types.OUTLINER_MT_context_menu.remove(hide_hair_menu)
+    bpy.types.OUTLINER_MT_collection.remove(hide_hair_menu)
+    bpy.types.OUTLINER_MT_object.remove(hide_hair_menu)
     bpy.types.TOPBAR_HT_upper_bar.remove(ui.file_menu_drawer)
     for cls in reversed(classes):
         bpy.utils.unregister_class(cls)
