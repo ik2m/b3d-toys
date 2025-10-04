@@ -196,7 +196,11 @@ class WM_OT_copy_blend_file_dir(Operator):
         return {'FINISHED'}
 
 
-classes = [UV_OT_AlignIslandsX, WM_OT_open_current_file_dir, WM_OT_copy_blend_file_dir]
+classes = [
+    UV_OT_AlignIslandsX,
+    WM_OT_open_current_file_dir,
+    WM_OT_copy_blend_file_dir
+]
 
 def register():
     for cls in classes:
