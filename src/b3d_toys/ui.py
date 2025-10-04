@@ -82,7 +82,7 @@ class VIEW3D_MT_PIE_b3d_toys(Menu):
         pie.separator()
 
         # 上(North)
-        pie.separator()
+        pie.operator("script.reload", text="スクリプトリロード", icon="FILE_REFRESH")
 
         # 左上(North-West)
         pie.separator()
